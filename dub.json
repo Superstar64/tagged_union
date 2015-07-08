@@ -1,0 +1,7 @@
+{
+	"name": "tagged_union",
+	"description": "Simple std.variant : Algebraic replacement ",
+	"authors": ["superstar64"],
+	"dependencies": {
+	}
+}
