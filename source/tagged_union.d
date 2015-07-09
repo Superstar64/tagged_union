@@ -36,24 +36,24 @@ struct TaggedUnion(Types_...)
         private Types data;
     }
 
-    this(T)(T type) if (staticIndexOf!(T, Types) != -1)
+    this(T)(T type) if (IndexOf!T != -1)
     {
         this = type;
     }
 
-    auto ref opAssign(T)(T type) if (staticIndexOf!(T, Types) != -1)
+    auto ref opAssign(T)(T type) if (IndexOf!T != -1)
     {
         set!T(type);
     }
 
 @property:
 
-    auto id()
+    auto id() const
     {
         return index;
     }
 
-    pure @trusted auto ref getID(size_t id)() if (id < Types.length)
+    pure @trusted auto ref getID(size_t id)() const if (id < Types.length)
     {
         assert(index == id);
         return data[id];
@@ -65,14 +65,33 @@ struct TaggedUnion(Types_...)
         data[id] = type;
     }
 
-    auto ref get(Type)() if (staticIndexOf!(Type, Types) != -1)
+    auto ref get(Type)() if (IndexOf!Type != -1)
     {
-        return getID!(staticIndexOf!(Type, Types));
+        return getID!(IndexOf!Type);
     }
 
-    auto ref set(Type)(Type type) if (staticIndexOf!(Type, Types) != -1)
+    auto ref set(Type)(Type type) if (IndexOf!Type != -1)
     {
-        return setID!(staticIndexOf!(Type, Types))(type);
+        return setID!(IndexOf!Type)(type);
+    }
+
+    auto toString()
+    {
+        foreach (c, Type; Types)
+        {
+            if (id == c)
+            {
+                import std.conv;
+
+                return (getID!c).to!string;
+            }
+        }
+        return "";
+    }
+
+    template IndexOf(Type)
+    {
+        enum IndexOf = staticIndexOf!(Type, Types);
     }
 }
 
@@ -85,4 +104,7 @@ pure @safe unittest
     assert(a.id == 0);
     assert(a.getID!0 == 5);
     assert(a.get!int == 5);
+    import std.conv;
+
+    assert((a.getID!0).to!string == (5.to!string));
 }
