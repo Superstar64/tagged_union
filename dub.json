@@ -1,6 +1,6 @@
 {
 	"name": "tagged_union",
-	"description": "Simple std.variant : Algebraic replacement ",
+	"description": "Simple std.variant : Algebraic alternative",
 	"license": "public domain",
 	"authors": ["superstar64"],
 	"dependencies": {
