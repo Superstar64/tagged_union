@@ -53,7 +53,7 @@ struct TaggedUnion(Types_...)
         return index;
     }
 
-    pure @trusted auto ref getID(size_t id)() const if (id < Types.length)
+    pure @trusted auto ref getID(size_t id)() inout if (id < Types.length)
     {
         assert(index == id);
         return data[id];
@@ -107,4 +107,8 @@ pure @safe unittest
     import std.conv;
 
     assert((a.getID!0).to!string == (5.to!string));
+    static assert(!is(typeof(a.getID!0) == const));
+    
+    const Union c = 7;
+    static assert(is(typeof(c.getID!0) == const));
 }
