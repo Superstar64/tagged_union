@@ -65,17 +65,17 @@ struct TaggedUnion(Types_...)
         data[id] = type;
     }
 
-    bool isType(Type)() if (IndexOf!Type != -1)
+    pure @safe bool isType(Type)() inout if (IndexOf!Type != -1)
     {
         return IndexOf!Type == id;
     }
 
-    auto ref get(Type)() if (IndexOf!Type != -1)
+    pure @safe auto ref get(Type)() inout if (IndexOf!Type != -1)
     {
         return getID!(IndexOf!Type);
     }
 
-    auto ref set(Type)(Type type) if (IndexOf!Type != -1)
+    pure @safe auto ref set(Type)(Type type) if (IndexOf!Type != -1)
     {
         return setID!(IndexOf!Type)(type);
     }
@@ -103,7 +103,7 @@ struct TaggedUnion(Types_...)
 pure @safe unittest
 {
     alias Union = TaggedUnion!(int, string);
-    Union a = 5;
+    const Union a = 5;
     assert(a.isType!int);
     Union b = "c";
     assert(b.isType!string);
@@ -114,8 +114,6 @@ pure @safe unittest
     import std.conv;
 
     assert((a.getID!0).to!string == (5.to!string));
-    static assert(!is(typeof(a.getID!0) == const));
-
-    const Union c = 7;
-    static assert(is(typeof(c.getID!0) == const));
+    static assert(is(typeof(a.getID!0) == const));
+    static assert(!is(typeof(b.getID!0) == const));
 }
