@@ -3,3 +3,5 @@ docs.json
 __dummy.html
 *.o
 *.obj
+libtagged_union.a
+__test__library__
