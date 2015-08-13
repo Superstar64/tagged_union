@@ -46,6 +46,30 @@ struct TaggedUnion(Types_...)
         set!T(type);
     }
 
+    auto opEquals(const typeof(this) other) const
+    {
+        if (id == other.id)
+        {
+            foreach (c, Type; Types)
+            {
+                if (id == c)
+                {
+                    return getID!c == other.getID!c;
+                }
+            }
+        }
+        return false;
+    }
+
+    auto opEquals(T)(const T type) const if (IndexOf!T != -1)
+    {
+        if (id == IndexOf!T)
+        {
+            return type == get!T;
+        }
+        return false;
+    }
+
 @property:
 
     auto id() const
@@ -108,6 +132,8 @@ pure @safe unittest
     Union b = "c";
     assert(b.isType!string);
     b = a;
+    assert(a == b);
+    assert(a == 5);
     assert(a.id == 0);
     assert(a.getID!0 == 5);
     assert(a.get!int == 5);
