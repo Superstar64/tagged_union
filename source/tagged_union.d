@@ -25,7 +25,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 For more information, please refer to <http://unlicense.org>
 +/
 module tagged_union;
-import std.typetuple;
 
 struct TaggedUnion(Types_...)
 {
@@ -120,6 +119,8 @@ struct TaggedUnion(Types_...)
 
     template IndexOf(Type)
     {
+        import std.typetuple : staticIndexOf;
+
         enum IndexOf = staticIndexOf!(Type, Types);
     }
 }
@@ -142,4 +143,13 @@ pure @safe unittest
     assert((a.getID!0).to!string == (5.to!string));
     static assert(is(typeof(a.getID!0) == const));
     static assert(!is(typeof(b.getID!0) == const));
+
+    enum ctfe = {
+        Union c = 1;
+        assert(c == 1);
+        c = "abc";
+        assert(c == "abc");
+        Union d = c;
+        return d == c;
+    }();
 }
