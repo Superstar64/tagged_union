@@ -93,16 +93,21 @@ struct TaggedUnion(Types_...)
         return IndexOf!Type == id;
     }
 
+    alias peek = isType;
+
     pure @safe auto ref get(Type)() inout if (IndexOf!Type != -1)
     {
         return getID!(IndexOf!Type);
     }
+
+    alias get(size_t i) = getID!i;
 
     pure @safe auto ref set(Type)(Type type) if (IndexOf!Type != -1)
     {
         return setID!(IndexOf!Type)(type);
     }
 
+    alias set(size_t i) = setID!i;
     auto toString()
     {
         foreach (c, Type; Types)
@@ -137,7 +142,10 @@ pure @safe unittest
     assert(a == 5);
     assert(a.id == 0);
     assert(a.getID!0 == 5);
+    assert(a.get!0 == 5);
     assert(a.get!int == 5);
+    b.set!1("hi");
+    assert(b == "hi");
     import std.conv;
 
     assert((a.getID!0).to!string == (5.to!string));
