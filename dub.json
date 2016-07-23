@@ -1,7 +1,7 @@
 {
 	"name": "tagged_union",
 	"description": "Simple std.variant : Algebraic alternative",
-	"license": "public domain",
+	"license": "BSL-1.0",
 	"authors": ["superstar64"],
 	"dependencies": {
 	}
